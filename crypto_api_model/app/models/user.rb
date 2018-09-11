@@ -53,13 +53,12 @@ class User < ActiveRecord::Base
       cost = amount * latest_price
       puts "#{amount} #{coin} will cost you #{cost} and you current balance is #{@user_balance[:USD]}."
     else
-      puts "You have entered an incorrct symbol"
+      puts "You have entered an incorrect symbol"
     end
 
     Transaction.create(currency_id: find_currency_id(coin),  user_id: self.id, amount: amount) #need to add where statement to look up bitcoin id to access id.
     @user_balance[:USD] -= cost
     @user_balance[currency] += amount
-
   end
 
   def sell_crypto_currency(currency)

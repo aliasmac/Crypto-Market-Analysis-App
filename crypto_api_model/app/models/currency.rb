@@ -43,7 +43,7 @@ class Currency < ActiveRecord::Base
     # Takes in an argument of one of 10 currencies and returns the price for named currency.
     latest_price = 0
     get_api_data["data"].each do |coin_hash|
-      if coin_hash["symbol"] == currency.downcase.upcase
+      if coin_hash["symbol"] == currency.upcase
         p "#{currency.downcase.upcase} is currently priced at: $#{coin_hash["quote"]["USD"]["price"].round(2)}"
         latest_price = coin_hash["quote"]["USD"]["price"].round(2)
       end
@@ -53,7 +53,14 @@ class Currency < ActiveRecord::Base
 
   def self.get_top_ten
     # Lists prices for all currencies by market cap.
-
+    i = 1
+    get_api_data["data"].each do |coin_hash|
+      p "#{i}. #{coin_hash["name"]}'s market cap is $#{coin_hash["quote"]["USD"]["market_cap"].round(2)}".to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
+      i += 1
+    end
   end
+
+  #Class method to see which user has bought the most of x currency
+
 
 end
