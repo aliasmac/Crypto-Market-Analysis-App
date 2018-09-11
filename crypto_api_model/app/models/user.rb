@@ -47,32 +47,41 @@ class User < ActiveRecord::Base
     coin = symbol.downcase.upcase
     coins = ["BTC", "ETH", "XRP", "BCH", "EOS", "XLM", "LTC", "USDT", "ADA", "XMR"]
     latest_price = Currency.get_market_quote(coin)
-
-    #if USD balance is equal to zero, you must add to account
-    if coins.include?(coin)
-      cost = amount * latest_price
-      puts "#{amount} #{coin} will cost you #{cost} and you current balance is #{@user_balance[:USD]}."
-    else
-      puts "You have entered an incorrct symbol"
-    end
-
-    Transaction.create(currency_id: find_currency_id(coin),  user_id: self.id, amount: amount) #need to add where statement to look up bitcoin id to access id.
-    @user_balance[:USD] -= cost
-    @user_balance[currency] += amount
-
+    cost = amount * latest_price
+      if !coins.include?(coin)
+        puts "You have entered an incorrect symbol"
+      elsif coins.include?(coin) && @user_balance[:USD] > cost
+        puts "#{amount} #{coin} will cost you #{cost} and your current balance is $#{@user_balance[:USD]}."
+        Transaction.create(currency_id: find_currency_id(coin), user_id: self.id, amount: amount) #need to add where statement to look up bitcoin id to access id.
+        @user_balance[:USD] -= cost
+        @user_balance[:"#{coin}"] += amount
+        puts "Transaction completed, purchased #{amount} #{coin}. Your current balance is $#{@user_balance[:USD]}"
+      elsif coins.include?(coin) && @user_balance[:USD] < cost
+        puts "I'm sorry, you don't have enough USD to make this purchase. Your current balance is $#{@user_balance[:USD]} and the cost is #{cost}#{coin}."
+      end
   end
 
-  def sell_crypto_currency(currency)
-    Transactions.create(currency_id: currency.id, user_id: self.id, amount: amount)
-    @user_balance += amount
+  def sell_crypto_currency(symbol, amount)
+    coin = symbol.downcase.upcase
+    coins = ["BTC", "ETH", "XRP", "BCH", "EOS", "XLM", "LTC", "USDT", "ADA", "XMR"]
+    latest_price = Currency.get_market_quote(coin)
+    cost = amount * latest_price
+    if !coins.include?(coin)
+      puts "You have entered an incorrect symbol"
+    elsif coins.include?(coin) && @user_balance[:"#{coin}"] >= amount
+      Transaction.create(currency_id: find_currency_id(coin), user_id: self.id, amount: amount)
+      @user_balance[:"#{coin}"] -= amount
+      @user_balance[:USD] += cost
+      puts "Selling #{amount} #{coin} for #{cost}. Your current balance is $#{@user_balance[:USD]}."
+    elsif coins.include?(coin) && @user_balance[:"#{coin}"] < amount
+      puts "I'm sorry, you don't have enough #{coin} to make this sale."
+    end
   end
 
   ####Insert user transaction methdods here#######
 
-  #def get_transaction_history
-
-
-
-
+  def get_transaction_history
+    holder_array = Transaction.all.select {|item| item.user_id == self.id}
+  end
 
 end
