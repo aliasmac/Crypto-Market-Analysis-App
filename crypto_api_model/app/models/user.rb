@@ -47,6 +47,7 @@ class User < ActiveRecord::Base
     coin = symbol.downcase.upcase
     coins = ["BTC", "ETH", "XRP", "BCH", "EOS", "XLM", "LTC", "USDT", "ADA", "XMR"]
     latest_price = Currency.get_market_quote(coin)
+<<<<<<< HEAD
     cost = amount * latest_price
       if !coins.include?(coin)
         puts "You have entered an incorrect symbol"
@@ -59,6 +60,20 @@ class User < ActiveRecord::Base
       elsif coins.include?(coin) && @user_balance[:USD] < cost
         puts "I'm sorry, you don't have enough USD to make this purchase. Your current balance is $#{@user_balance[:USD]} and the cost is #{cost}#{coin}."
       end
+=======
+
+    #if USD balance is equal to zero, you must add to account
+    if coins.include?(coin)
+      cost = amount * latest_price
+      puts "#{amount} #{coin} will cost you #{cost} and you current balance is #{@user_balance[:USD]}."
+    else
+      puts "You have entered an incorrect symbol"
+    end
+
+    Transaction.create(currency_id: find_currency_id(coin),  user_id: self.id, amount: amount) #need to add where statement to look up bitcoin id to access id.
+    @user_balance[:USD] -= cost
+    @user_balance[currency] += amount
+>>>>>>> 41f301a4a2bd035b7f4dcbf2b505573b5ccb1c47
   end
 
   def sell_crypto_currency(symbol, amount)
