@@ -58,8 +58,7 @@ class User < ActiveRecord::Base
 
     Transaction.create(currency_id: find_currency_id(coin),  user_id: self.id, amount: amount) #need to add where statement to look up bitcoin id to access id.
     @user_balance[:USD] -= cost
-    @user_balance[currency] += amount
-
+    @user_balance[:"#{coin}"] += amount
   end
 
   def sell_crypto_currency(currency)
@@ -69,10 +68,8 @@ class User < ActiveRecord::Base
 
   ####Insert user transaction methdods here#######
 
-  #def get_transaction_history
-
-
-
-
+  def get_transaction_history
+    holder_array = Transaction.all.select {|item| item.user_id == self.id}
+  end
 
 end
