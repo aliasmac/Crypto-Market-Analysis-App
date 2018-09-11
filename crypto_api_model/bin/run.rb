@@ -9,7 +9,15 @@ require_relative '../app/models/user.rb'
 #User data is already seeded
 
 
-
+ali = User.create(name: "Ali")
+ali.activate_account
+ali.add_usd_to_balance(4000)
+ali.buy_crypto_currency("btc", 2)
 
 binding.pry
+
+
+
+
+
 puts "HELLO WORLD"

@@ -24,13 +24,13 @@ class Currency < ActiveRecord::Base
     p "Make you choice!"
   end
 
-  def get_api_data
+  def self.get_api_data
     # file = RestClient.get("https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?&CMC_PRO_API_KEY=ec5d4736-f3ee-4f03-b8b8-1e1c82acba47")
     file2 = File.read('app/models/example_hash.json')
     data_hash = JSON.parse(file2)
   end
 
-  def get_latest_prices
+  def self.get_latest_prices
     # Lists USD price for each individual token for all currencies and displays alphabetically.
     get_api_data["data"].each do |coin_hash|
       p "#{coin_hash["name"]}: $#{coin_hash["quote"]["USD"]["price"].round(2)}"
@@ -39,7 +39,7 @@ class Currency < ActiveRecord::Base
 
   #Please enter the name of the cruptocurrency you would like to buy"
 
-  def get_market_quote(currency)
+  def self.get_market_quote(currency)
     # Takes in an argument of one of 10 currencies and returns the price for named currency.
     latest_price = 0
     get_api_data["data"].each do |coin_hash|
@@ -47,13 +47,13 @@ class Currency < ActiveRecord::Base
         p "#{currency.downcase.upcase} is currently priced at: $#{coin_hash["quote"]["USD"]["price"].round(2)}"
         latest_price = coin_hash["quote"]["USD"]["price"].round(2)
       end
-      binding.pry
     end
     latest_price
   end
 
-  def get_top_ten
+  def self.get_top_ten
     # Lists prices for all currencies by market cap.
+
   end
 
 end
