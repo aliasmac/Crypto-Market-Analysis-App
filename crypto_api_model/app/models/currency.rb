@@ -41,12 +41,15 @@ class Currency < ActiveRecord::Base
 
   def get_market_quote(currency)
     # Takes in an argument of one of 10 currencies and returns the price for named currency.
+    latest_price = 0
     get_api_data["data"].each do |coin_hash|
-      if coin_hash["name"] == currency.downcase.capitalize
-        p "#{currency.downcase.capitalize} is currently priced at: $#{coin_hash["quote"]["USD"]["price"].round(2)}"
+      if coin_hash["symbol"] == currency.downcase.upcase
+        p "#{currency.downcase.upcase} is currently priced at: $#{coin_hash["quote"]["USD"]["price"].round(2)}"
+        latest_price = coin_hash["quote"]["USD"]["price"].round(2)
       end
+      binding.pry
     end
-
+    latest_price
   end
 
   def get_top_ten
