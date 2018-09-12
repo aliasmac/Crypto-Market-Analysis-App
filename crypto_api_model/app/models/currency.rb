@@ -10,7 +10,7 @@ class Currency < ActiveRecord::Base
 
   def coins_you_can_buy
     p "Thank you for choosing Crypto Billionaire'/s, we're here to make your dreams come true"
-    p "We sell the follwoing cryptocurrencies:"
+    p "We sell the following cryptocurrencies:"
     p "- Bitcoin"
     p "- Ethereum"
     p "- XRP (Ripple)"
@@ -55,12 +55,16 @@ class Currency < ActiveRecord::Base
     # Lists prices for all currencies by market cap.
     i = 1
     get_api_data["data"].each do |coin_hash|
-      p "#{i}. #{coin_hash["name"]}'s market cap is $#{coin_hash["quote"]["USD"]["market_cap"].round(2)}".to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
+      puts "#{i}. #{coin_hash["name"]}'s market cap is $#{coin_hash["quote"]["USD"]["market_cap"].round(2)}".to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse
       i += 1
     end
+    puts "Prices fetched"
   end
 
   #Class method to see which user has bought the most of x currency
+
+  #Class method to see which user has bought the most of x currency
+
 
 
 end

@@ -1,46 +1,77 @@
+require 'pry'
+
+require_relative '../app/models/currency.rb'
+require_relative '../app/models/transactions.rb'
+require_relative '../app/models/user.rb'
+
+
 class CommandLine
 
-  def welcome
+  attr_accessor :user_name
+
+  def self.welcome
     p "Thank you for choosing CRYPT-O-ZONE, we're here to make your dreams come true"
   end
 
-  def instructions
+  def self.instructions
     p "Step 1: Open an account."
     p "Step 2: Use our research centre to unleash synergistic functionalities."
+    p "step 3: buy and sell cryto assets"
   end
 
-  def prompt_user_name
-    p "Please choose a user name."
+  def self.prompt_user_name
+    p "To continue, please choose a user name to open you account"
     user_input = gets.chomp
-    @user_account = User.create(name: user_input)
-    @user_account.activate_account
+    @user_name = User.create(name: user_input) #Change to find_by_or_create method
+    @user_name.activate_account
+    p "Congratulations, you have successfully opened your crypto trading account with CRYPTO-O-ZONE!"
   end
 
-  def user_add_balance
+
+  def self.menu
+    p "Please choose from one of the following options:"
+    p "'1' to add USD to your account"
+    p "'2' to enter our crypto data research centre"
+    p "'3' to buy crypto currency"
+    p "'4' to sell crypto currency"
+    p "'q' to exit application, not sure why you would ever want to leave though  ¯\_(ツ)_/¯"
+    gets.chomp.downcase
+  end
+
+  def self.menu_research_centre
+    p "Welcome to the CRYPTO-O-ZONE\u2122 Research Centre\u2122"
+        p "'1' to get the latest crypto prices"
+        p "'2' to get the latest market quote for a specific cryptocurrency"
+        p "'3' to get the top 10 cryptocurrencies by market cap"
+        p "'q' to return to main menu"
+        gets.chomp.downcase
+  end
+
+  def self.user_add_balance
     p "Please deposit US Dollars into your account to start trading."
     p "Amount:"
-    balance_input = gets.chomp
+    balance_input = gets.chomp.to_i
       if balance_input.is_a? Integer
-      @user_account.add_usd_to_balance(balance_input)
+        @user_name.add_usd_to_balance(balance_input)
+        @user_name.user_current_crypto_balance
       else
-      "Invalid input. Please enter a whole number."
+        p "Invalid input. Please enter a whole number."
       end
   end
 
-  def user_get_latest_prices
-   p "Are you seeking the truth? Enter YES to get lastest Crypto Currency prices."
-   latest_prices_input = gets.chomp
-     if latest_prices_input.downcase == "yes"
-        Currency.get_latest_prices
-     elsif latest_prices_input.downcase == "no"
-        p "Okay!"
-     else
-        p "Invalid Input"
-     end
+  #Add menu here:
+  def self.user_get_latest_prices
+    p "Fetching latest data from the trading floor...."
+    0.step(100, 5) do |i|
+    printf("\rProgress: [%-20s]", "=" * (i/5))
+    sleep(0.2)
+    end
+    puts
+    Currency.get_latest_prices
   end
 
-  def choose_currency_can_buy
-    p "We sell the following cryptocurrencies:"
+  def self.choose_currency_to_buy
+    p "You may purchase the following cryptocurrencies:"
     p "- Bitcoin (BTC)"
     p "- Ethereum (ETH)"
     p "- XRP (Ripple) (XRP)"
@@ -54,13 +85,22 @@ class CommandLine
     p "Please enter symbol to make your choice!"
     currency_choice = gets.chomp
     p "Please enter amount."
-    amount_entered = gets.chomp
+    amount_entered = gets.chomp.to_i
     if amount_entered.is_a? Integer
-      buy_crypto_currency(currency_choice, amount_entered)
+      @user_name.buy_crypto_currency(currency_choice, amount_entered)
     else
       p "Invalid amount"
     end
   end
 
+  def self.choose_currency_to_sell
+    @user_name.user_current_crypto_balance
+    p "Which crytocurrency would you like to sell?"
+    sym = gets.chomp
+    p "How much would you like to sell?"
+    amount = gets.chomp.to_i
+    @user_name.sell_crypto_currency(sym, amount)
+    p "Thank you for trading CRYPT-O-ZONE!"
+  end
 
 end
