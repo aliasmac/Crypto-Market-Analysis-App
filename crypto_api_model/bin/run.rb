@@ -24,33 +24,17 @@ def run
   case CommandLine.menu
     when '1'
       CommandLine.user_add_balance
-      # binding.pry
       run
     when '2'
-      #Enter the research centre
-      case CommandLine.menu_research_centre
-        when '1'
-          CommandLine.user_get_latest_prices
-          CommandLine.menu_research_centre
-        when '2'
-          p "Please enter the the 'symbol' of the cryptocurrency that you would like a price for"
-          user_input = gets.chomp
-          Currency.get_market_quote(user_input)
-          CommandLine.menu_research_centre
-        when '3'
-          p Currency.get_top_ten
-          CommandLine.menu_research_centre
-        when 'q'
-          run
-        else
-          puts "That's not a valid entry"
-          run
-        end
+      CommandLine.research_centre_menu
     when '3'
       CommandLine.choose_currency_to_buy
       run
     when '4'
       CommandLine.choose_currency_to_sell
+      run
+    when '5'
+      CommandLine.user_check_balance
       run
     when 'q'
       exit
@@ -61,6 +45,5 @@ def run
 end
 
 run
-
 
 puts "HELLO WORLD"

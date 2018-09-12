@@ -8,12 +8,6 @@ class User < ActiveRecord::Base
   has_many :transactions
   has_many :currencies, through: :transactions
 
-  #Is amount in USD or Crypto?
-  #Either way we need to convert the money
-
-  #How much crypto would you like to buy?
-  #They must enter correct symbol
-
   attr_reader :user_balance
 
   def format_number(amount)
@@ -34,7 +28,6 @@ class User < ActiveRecord::Base
       ADA: 0,
       XMR: 0
     }
-    @user_balance[:USD]
   end
 
   def add_usd_to_balance(amount)

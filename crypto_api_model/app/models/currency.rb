@@ -25,9 +25,9 @@ class Currency < ActiveRecord::Base
   end
 
   def self.get_api_data
-    # file = RestClient.get("https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?&CMC_PRO_API_KEY=ec5d4736-f3ee-4f03-b8b8-1e1c82acba47")
-    file2 = File.read('app/models/example_hash.json')
-    data_hash = JSON.parse(file2)
+    response = RestClient.get("https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?&CMC_PRO_API_KEY=ec5d4736-f3ee-4f03-b8b8-1e1c82acba47&limit=10")
+    # file2 = File.read('app/models/example_hash.json')
+    data_hash = JSON.parse(response)
   end
 
   def self.get_latest_prices

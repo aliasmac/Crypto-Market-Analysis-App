@@ -24,16 +24,18 @@ class CommandLine
     user_input = gets.chomp
     @user_name = User.create(name: user_input) #Change to find_by_or_create method
     @user_name.activate_account
-    p "Congratulations, you have successfully opened your crypto trading account with CRYPTO-O-ZONE!"
+    p "Congratulations #{@user_name.name}, you have successfully opened your crypto trading account with CRYPTO-O-ZONE!"
   end
 
 
   def self.menu
+    p "~(˘▾˘~)"
     p "Please choose from one of the following options:"
     p "'1' to add USD to your account"
     p "'2' to enter our crypto data research centre"
     p "'3' to buy crypto currency"
     p "'4' to sell crypto currency"
+    p "'5' to check balance'"
     p "'q' to exit application, not sure why you would ever want to leave though  ¯\_(ツ)_/¯"
     gets.chomp.downcase
   end
@@ -44,13 +46,33 @@ class CommandLine
         p "'2' to get the latest market quote for a specific cryptocurrency"
         p "'3' to get the top 10 cryptocurrencies by market cap"
         p "'q' to return to main menu"
-        gets.chomp.downcase
+        # gets.chomp.downcase
+  end
+
+  def self.research_centre_menu
+    loop do
+      CommandLine.menu_research_centre
+      response = gets.chomp
+      if response == '1'
+        CommandLine.user_get_latest_prices
+      elsif response == '2'
+        puts "Please enter the the 'symbol' of the cryptocurrency that you would like a price for"
+        user_input = gets.chomp
+        Currency.get_market_quote(user_input)
+      elsif response == '3'
+        puts Currency.get_top_ten
+      elsif response == 'q'
+        run
+      else
+        puts "That's not a valid entry"
+      end
+    end
   end
 
   def self.user_add_balance
     p "Please deposit US Dollars into your account to start trading."
     p "Amount:"
-    balance_input = gets.chomp.to_i
+    balance_input = gets.chomp.scan(/\d/).join.to_i
       if balance_input.is_a? Integer
         @user_name.add_usd_to_balance(balance_input)
         @user_name.user_current_crypto_balance
@@ -93,6 +115,7 @@ class CommandLine
     end
   end
 
+
   def self.choose_currency_to_sell
     @user_name.user_current_crypto_balance
     p "Which crytocurrency would you like to sell?"
@@ -102,5 +125,11 @@ class CommandLine
     @user_name.sell_crypto_currency(sym, amount)
     p "Thank you for trading CRYPT-O-ZONE!"
   end
+
+  def self.user_check_balance
+    @user_name.user_current_crypto_balance
+  end
+
+
 
 end
